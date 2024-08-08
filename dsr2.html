@@ -11,7 +11,7 @@
   <style>
     body {
       background: linear-gradient(135deg, #f5faff, #e0f0ff);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Poppins', sans-serif;
     }
 
     .fade-in {
@@ -85,7 +85,7 @@
 
     .tooltip {
       position: absolute;
-      bottom: 100%; /* Position above the input */
+      bottom: 100%;
       left: 0;
       background: #333;
       color: #fff;
@@ -114,6 +114,27 @@
     .input-container {
       position: relative;
       margin-bottom: 16px;
+    }
+
+    .focus:ring-blue-500:focus {
+      border-color: #4a90e2;
+      box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.3);
+    }
+
+    .btn-submit {
+      background-color: #4a90e2;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: none;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: #357ABD;
+      transform: translateY(-2px);
     }
   </style>
 </head>
@@ -197,8 +218,7 @@
           <div class="tooltip">Add any additional comments or notes</div>
         </div>
 
-        <button type="submit"
-          class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 transition duration-300 ease-in-out">
+        <button type="submit" class="btn-submit">
           Submit Report
         </button>
       </form>
@@ -245,16 +265,6 @@
     flatpickr("#date", {
       dateFormat: "Y-m-d",
       locale: "en"
-    });
-
-    // Smooth scrolling
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-          behavior: 'smooth'
-        });
-      });
     });
 
     // Tooltip visibility on focus
