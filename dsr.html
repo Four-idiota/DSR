@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Service Report</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #f5faff, #e0f0ff);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .fade-in {
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    textarea,
+    input[type="text"],
+    input[type="email"],
+    input[type="date"] {
+      background: #ffffff;
+      border: 1px solid #c3dafe;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      padding: 10px;
+      font-size: 0.875rem;
+      border-radius: 8px;
+      position: relative; /* Added for tooltip positioning */
+    }
+
+    textarea:focus,
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="date"]:focus {
+      border-color: #8ebfef;
+      background: #f9f9f9;
+      box-shadow: 0 0 0 3px rgba(142, 191, 239, 0.5);
+      outline: none;
+    }
+
+    .hover-effect {
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .hover-effect:hover {
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .card {
+      border: 1px solid #d1e3f3;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .icon-animation {
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .icon-animation:hover {
+      transform: scale(1.1);
+      color: #6ab0f3;
+    }
+
+    .table-fixed {
+      table-layout: fixed;
+      width: 100%;
+    }
+
+    .table-fixed th,
+    .table-fixed td {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .flatpickr-calendar {
+      border: 1px solid #d1e3f3;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      border-radius: 8px;
+      background-color: #ffffff;
+    }
+
+    .flatpickr-day:hover {
+      background-color: #d1e3f3;
+      color: #000;
+    }
+
+    .flatpickr-day.selected {
+      background-color: #8ebfef;
+      color: #ffffff;
+    }
+
+    .flatpickr-month {
+      color: #333;
+    }
+
+    .calendar-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #8ebfef;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .tooltip {
+      position: absolute;
+      bottom: 100%; /* Position above the input */
+      left: 0;
+      background: #333;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: translateY(-10px);
+      z-index: 10;
+    }
+
+    .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 5px;
+      border-style: solid;
+      border-color: #333 transparent transparent transparent;
+    }
+
+    .input-container {
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .input-container:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body class="p-6">
+  <div class="container mx-auto max-w-4xl">
+    <h1 class="text-3xl font-extrabold text-gray-800 mb-4 text-center">Daily Service Report</h1>
+
+    <!-- Form Section -->
+    <div class="bg-white shadow-lg rounded-lg p-6 mb-6 max-w-full mx-auto card fade-in">
+      <h2 class="text-xl font-semibold mb-4 text-gray-800">New Report</h2>
+      <form id="reportForm" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Input fields -->
+          <div class="input-container">
+            <label for="month" class="block text-gray-700 text-sm font-medium">Month</label>
+            <input type="text" id="month" name="month"
+              class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              required>
+            <div class="tooltip">Enter the month</div>
+          </div>
+          <div class="input-container">
+            <label for="name" class="block text-gray-700 text-sm font-medium">Name</label>
+            <input type="text" id="name" name="name"
+              class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              required>
+            <div class="tooltip">Enter your name</div>
+          </div>
+          <div class="input-container">
+            <label for="date" class="block text-gray-700 text-sm font-medium">Date</label>
+            <input type="text" id="date" name="date"
+              class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="yyyy-mm-dd" required>
+            <i class="fas fa-calendar calendar-icon icon-animation"></i>
+            <div class="tooltip">Pick a date</div>
+          </div>
+          <div class="input-container">
+            <label for="location" class="block text-gray-700 text-sm font-medium">Location</label>
+            <input type="text" id="location" name="location"
+              class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              required>
+            <div class="tooltip">Enter the location</div>
+          </div>
+          <div class="input-container">
+            <label for="company" class="block text-gray-700 text-sm font-medium">Company Name</label>
+            <input type="text" id="company" name="company"
+              class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              required>
+            <div class="tooltip">Enter the company name</div>
+          </div>
+          <div class="input-container">
+            <label for="contactPerson" class="block text-gray-700 text-sm font-medium">Contact Person</label>
+            <input type="text" id="contactPerson" name="contactPerson"
+              class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              required>
+            <div class="tooltip">Enter the contact person</div>
+          </div>
+          <div class="input-container">
+            <label for="contactNumber" class="block text-gray-700 text-sm font-medium">Contact Number</label>
+            <input type="text" id="contactNumber" name="contactNumber"
+              class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              required>
+            <div class="tooltip">Enter the contact number</div>
+          </div>
+          <div class="input-container">
+            <label for="mailID" class="block text-gray-700 text-sm font-medium">Mail ID</label>
+            <input type="email" id="mailID" name="mailID"
+              class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              required>
+            <div class="tooltip">Enter your email</div>
+          </div>
+          <div class="input-container">
+            <label for="status" class="block text-gray-700 text-sm font-medium">Visit Status</label>
+            <input type="text" id="status" name="status"
+              class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              required>
+            <div class="tooltip">Enter the visit status</div>
+          </div>
+          <div class="input-container">
+            <label for="remarks" class="block text-gray-700 text-sm font-medium">Remarks</label>
+            <textarea id="remarks" name="remarks"
+              class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              rows="3" required></textarea>
+            <div class="tooltip">Enter any remarks</div>
+          </div>
+          <div class="input-container">
+            <label for="details" class="block text-gray-700 text-sm font-medium">Details of the Visit</label>
+            <textarea id="details" name="details"
+              class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              rows="5" required></textarea>
+            <div class="tooltip">Provide details of the visit</div>
+          </div>
+        </div>
+
+        <div class="flex justify-end mt-6">
+          <button type="submit"
+            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300">Submit</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Table Section -->
+    <div class="bg-white shadow-lg rounded-lg p-6 max-w-full mx-auto card fade-in">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-800">Reports Overview</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full table-fixed divide-y divide-gray-200">
+          <thead>
+            <tr class="bg-gray-50">
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Month</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company Name</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact Person</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact Number</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mail ID</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Visit Status</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Remarks</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <!-- Sample row -->
+            <tr>
+              <td class="px-4 py-2 text-sm text-gray-900">August</td>
+              <td class="px-4 py-2 text-sm text-gray-900">John Doe</td>
+              <td class="px-4 py-2 text-sm text-gray-900">2024-08-05</td>
+              <td class="px-4 py-2 text-sm text-gray-900">New York</td>
+              <td class="px-4 py-2 text-sm text-gray-900">ABC Corp</td>
+              <td class="px-4 py-2 text-sm text-gray-900">Jane Smith</td>
+              <td class="px-4 py-2 text-sm text-gray-900">1234567890</td>
+              <td class="px-4 py-2 text-sm text-gray-900">john.doe@example.com</td>
+              <td class="px-4 py-2 text-sm text-gray-900">Completed</td>
+              <td class="px-4 py-2 text-sm text-gray-900">N/A</td>
+              <td class="px-4 py-2 text-sm text-gray-900">Met with client, discussed project progress.</td>
+            </tr>
+            <!-- More rows as needed -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript for form submission or additional functionality -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    document.getElementById('reportForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      // Handle form submission
+      alert('Form submitted!');
+    });
+
+    const dateInput = document.getElementById('date');
+    flatpickr(dateInput, {
+      dateFormat: "Y-m-d",
+      allowInput: true,
+      clickOpens: false // Disable automatic opening
+    });
+
+    document.querySelector('.calendar-icon').addEventListener('click', function () {
+      dateInput.focus();
+    });
+  </script>
+</body>
+
+</html>
