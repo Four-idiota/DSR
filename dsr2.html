@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Service Report</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #f5faff, #e0f0ff);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .fade-in {
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hover-effect {
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .hover-effect:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .card {
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .icon-animation {
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .icon-animation:hover {
+      transform: scale(1.1);
+      color: #4a90e2;
+    }
+
+    .flatpickr-calendar {
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      background-color: #ffffff;
+    }
+
+    .flatpickr-day:hover {
+      background-color: #e2e8f0;
+      color: #000;
+    }
+
+    .flatpickr-day.selected {
+      background-color: #4a90e2;
+      color: #ffffff;
+    }
+
+    .flatpickr-month {
+      color: #333;
+    }
+
+    .calendar-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #4a90e2;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .tooltip {
+      position: absolute;
+      bottom: 100%; /* Position above the input */
+      left: 0;
+      background: #333;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: translateY(-10px);
+      z-index: 10;
+    }
+
+    .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 5px;
+      border-style: solid;
+      border-color: #333 transparent transparent transparent;
+    }
+
+    .input-container {
+      position: relative;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+
+<body class="p-6">
+  <div class="container mx-auto max-w-4xl">
+    <h1 class="text-3xl font-extrabold text-gray-800 mb-6 text-center">Daily Service Report</h1>
+
+    <!-- Form Section -->
+    <div class="bg-white shadow-lg rounded-lg p-6 mb-8 max-w-full mx-auto card fade-in">
+      <h2 class="text-xl font-semibold mb-6 text-gray-800">New Report</h2>
+      <form id="reportForm" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Input fields -->
+          <div class="input-container">
+            <label for="month" class="block text-gray-700 text-sm font-medium">Month</label>
+            <input type="text" id="month" name="month"
+              class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm hover-effect focus:ring-blue-500 focus:border-blue-500"
+              required>
+            <div class="tooltip">Enter the month</div>
+          </div>
+          <div class="input-container">
+            <label for="name" class="block text-gray-700 text-sm font-medium">Name</label>
+            <input type="text" id="name" name="name"
+              class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm hover-effect focus:ring-blue-500 focus:border-blue-500"
+              required>
+            <div class="tooltip">Enter your name</div>
+          </div>
+          <div class="input-container">
+            <label for="date" class="block text-gray-700 text-sm font-medium">Date</label>
+            <div class="relative">
+              <input type="text" id="date" name="date"
+                class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm hover-effect focus:ring-blue-500 focus:border-blue-500"
+                placeholder="yyyy-mm-dd" required>
+              <i class="fas fa-calendar calendar-icon icon-animation"></i>
+              <div class="tooltip">Pick a date</div>
+            </div>
+          </div>
+          <div class="input-container">
+            <label for="location" class="block text-gray-700 text-sm font-medium">Location</label>
+            <input type="text" id="location" name="location"
+              class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm hover-effect focus:ring-blue-500 focus:border-blue-500"
+              required>
+            <div class="tooltip">Enter the location</div>
+          </div>
+          <div class="input-container">
+            <label for="company" class="block text-gray-700 text-sm font-medium">Company Name</label>
+            <input type="text" id="company" name="company"
+              class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm hover-effect focus:ring-blue-500 focus:border-blue-500"
+              required>
+            <div class="tooltip">Enter the company name</div>
+          </div>
+          <div class="input-container">
+            <label for="contactPerson" class="block text-gray-700 text-sm font-medium">Contact Person</label>
+            <input type="text" id="contactPerson" name="contactPerson"
+              class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm hover-effect focus:ring-blue-500 focus:border-blue-500"
+              required>
+            <div class="tooltip">Enter the contact person</div>
+          </div>
+          <div class="input-container">
+            <label for="contactNumber" class="block text-gray-700 text-sm font-medium">Contact Number</label>
+            <input type="text" id="contactNumber" name="contactNumber"
+              class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm hover-effect focus:ring-blue-500 focus:border-blue-500"
+              required>
+            <div class="tooltip">Enter the contact number</div>
+          </div>
+          <div class="input-container">
+            <label for="serviceType" class="block text-gray-700 text-sm font-medium">Service Type</label>
+            <input type="text" id="serviceType" name="serviceType"
+              class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm hover-effect focus:ring-blue-500 focus:border-blue-500"
+              required>
+            <div class="tooltip">Enter the type of service</div>
+          </div>
+        </div>
+
+        <div class="input-container">
+          <label for="comments" class="block text-gray-700 text-sm font-medium">Comments</label>
+          <textarea id="comments" name="comments"
+            class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm hover-effect focus:ring-blue-500 focus:border-blue-500"
+            rows="4" placeholder="Enter comments here" required></textarea>
+          <div class="tooltip">Add any additional comments or notes</div>
+        </div>
+
+        <button type="submit"
+          class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 transition duration-300 ease-in-out">
+          Submit Report
+        </button>
+      </form>
+    </div>
+
+    <!-- Reports Table -->
+    <div class="bg-white shadow-lg rounded-lg p-6 max-w-full mx-auto card fade-in">
+      <h2 class="text-xl font-semibold mb-6 text-gray-800">Submitted Reports</h2>
+      <table class="min-w-full table-fixed border-collapse">
+        <thead>
+          <tr class="bg-blue-100 text-left text-gray-700">
+            <th class="py-3 px-4 border-b">Month</th>
+            <th class="py-3 px-4 border-b">Name</th>
+            <th class="py-3 px-4 border-b">Date</th>
+            <th class="py-3 px-4 border-b">Location</th>
+            <th class="py-3 px-4 border-b">Company Name</th>
+            <th class="py-3 px-4 border-b">Contact Person</th>
+            <th class="py-3 px-4 border-b">Contact Number</th>
+            <th class="py-3 px-4 border-b">Service Type</th>
+            <th class="py-3 px-4 border-b">Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="py-3 px-4 border-b">August</td>
+            <td class="py-3 px-4 border-b">John Doe</td>
+            <td class="py-3 px-4 border-b">2024-08-05</td>
+            <td class="py-3 px-4 border-b">New York</td>
+            <td class="py-3 px-4 border-b">ABC Corp</td>
+            <td class="py-3 px-4 border-b">Jane Smith</td>
+            <td class="py-3 px-4 border-b">123-456-7890</td>
+            <td class="py-3 px-4 border-b">Consulting</td>
+            <td class="py-3 px-4 border-b">Meeting with client</td>
+          </tr>
+          <!-- More rows as needed -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    // Initialize Flatpickr for date input
+    flatpickr("#date", {
+      dateFormat: "Y-m-d",
+      locale: "en"
+    });
+
+    // Smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Tooltip visibility on focus
+    document.querySelectorAll('.input-container input, .input-container textarea').forEach(input => {
+      input.addEventListener('focus', function () {
+        this.nextElementSibling.style.visibility = 'visible';
+        this.nextElementSibling.style.opacity = '1';
+        this.nextElementSibling.style.transform = 'translateY(0)';
+      });
+      input.addEventListener('blur', function () {
+        this.nextElementSibling.style.visibility = 'hidden';
+        this.nextElementSibling.style.opacity = '0';
+        this.nextElementSibling.style.transform = 'translateY(-10px)';
+      });
+    });
+  </script>
+</body>
+
+</html>
